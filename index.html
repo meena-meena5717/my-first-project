@@ -1,0 +1,210 @@
+cat > index.html <<'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Website</title>
+    
+      <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+}
+
+.telegram-wrapper{
+    background: linear-gradient(135deg, #0f172a, #1e3a8a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.telegram-card{
+    width: 90%;
+    max-width: 380px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+
+
+.profile-img{
+      width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #38bdf8;
+    margin-bottom: 15px;
+}
+
+.title{
+font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.join-btn{
+display: block;
+    width: 100%;
+    padding: 14px;
+    margin: 15px 0;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    background: linear-gradient(135deg, #38bdf8, #4ade80);
+    color: #000;
+    transition: 0.3s;
+}
+
+.join-btn:hover{
+transform: scale(1.05);
+    box-shadow: 0 0 15px #4ade80;
+
+}
+
+.features{
+      text-align: left;
+    margin-top: 10px;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.features span{
+    display: block;
+}
+
+
+.disclaimer{
+    margin-top: 15px;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.bottom-ad{
+margin-top: 15px;
+    font-size: 12px;
+    padding: 8px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4f46e5, #9333ea, #ec4899);
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+    animation: glow 2s infinite alternate;
+}
+
+.bottom-ad span{
+color:#89fff2;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.06);}
+100%{transform:scale(1);}
+}
+
+@keyframes blink{
+0%{opacity:1;}
+50%{opacity:0.92;}
+100%{opacity:1;}
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media(max-width:480px){
+
+.telegram-card{
+padding:30px 18px;
+border-radius:28px;
+}
+
+.title{
+font-size:36px;
+}
+
+.join-btn{
+font-size:18px;
+padding:18px 10px;
+}
+
+.features p{
+font-size:16px;
+}
+
+.bottom-ad{
+font-size:16px;
+}
+
+.profile-img{
+width:95px;
+height:95px;
+}
+
+}
+</style>
+</head>
+
+
+<body>
+  
+<div class="telegram-wrapper">
+
+<div class="telegram-card">
+
+<img src="https://i.ibb.co/Wp2sPHNv/P1-Hkd-Xz-YGBep5-LG1-TYFKy-QG5f-Hmd5-Znf-Rj-Gnns7vbp-Kjd-NRn-Ae22-YZHNox-E05p-I6-JKa-Ew0871y-Bjjb-Fsf-Kips.jpg" class="profile-img">
+
+<h1 class="title">
+DEEPAK WADHWA
+</h1>
+
+<a href="https://t.me/+y2muqSiFjYA1MDI1"
+   class="join-btn"
+>
+    JOIN FREE TELEGRAM CHANNEL
+</a>
+
+<div class="features">
+<span>📊 NIFTY • BANKNIFTY • SENSEX</span>
+<span>✅ Daily Calls Available</span>
+<span>⭐ High Accuracy Strategy</span>
+<span>🎯 Expert Analysis</span>
+</div>
+
+<a href="https://t.me/+y2muqSiFjYA1MDI1"
+   class="join-btn"
+>
+    JOIN FREE TELEGRAM CHANNEL
+</a>
+
+<div class="disclaimer">
+Disclaimer: This is for educational purposes only.
+We are not SEBI registered.
+</div>
+
+<div class="bottom-ad">
+        JOIN TODAY FOR FREE
+</div>
+
+</div>
+</div>
+</body>
+</html>
