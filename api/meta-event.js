@@ -8,13 +8,19 @@ export default async function handler(req, res) {
     try {
         let body = req.body;
 
-        // Parse JSON body if Vercel provides it as a string
-        if (typeof body === "string") {
-            body = JSON.parse(body);
+        // If body is not already parsed, read the raw request body
+        if (!body || typeof body === "string") {
+            let rawBody = "";
+
+            for await (const chunk of req) {
+                rawBody += chunk;
+            }
+
+            body = rawBody ? JSON.parse(rawBody) : {};
         }
 
-        const eventId = body?.event_id;
-        const eventSourceUrl = body?.event_source_url;
+        const eventId = body.event_id;
+        const eventSourceUrl = body.event_source_url || "";
 
         if (!eventId) {
             return res.status(400).json({
@@ -37,7 +43,7 @@ export default async function handler(req, res) {
             event_time: Math.floor(Date.now() / 1000),
             event_id: eventId,
             action_source: "website",
-            event_source_url: eventSourceUrl || ""
+            event_source_url: eventSourceUrl
         };
 
         const response = await fetch(
@@ -59,7 +65,10 @@ export default async function handler(req, res) {
         console.log("Meta CAPI response:", result);
 
         if (!response.ok) {
-            return res.status(response.status).json(result);
+            return res.status(response.status).json({
+                error: "Meta API error",
+                meta: result
+            });
         }
 
         return res.status(200).json({
