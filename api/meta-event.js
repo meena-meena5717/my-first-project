@@ -26,7 +26,7 @@ export default async function handler(req, res) {
             event_time: Math.floor(Date.now() / 1000),
             event_id: event_id,
             action_source: "website",
-            event_source_url: event_source_url || req.headers.referer || ""
+            event_source_url: event_source_url || ""
         };
 
         const response = await fetch(
