@@ -1,14 +1,25 @@
 export default async function handler(req, res) {
     if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
+        return res.status(405).json({
+            error: "Method not allowed"
+        });
     }
 
     try {
-        const { event_id, event_source_url } = req.body;
+        let body = req.body;
 
-        if (!event_id) {
+        // Parse JSON body if Vercel provides it as a string
+        if (typeof body === "string") {
+            body = JSON.parse(body);
+        }
+
+        const eventId = body?.event_id;
+        const eventSourceUrl = body?.event_source_url;
+
+        if (!eventId) {
             return res.status(400).json({
-                error: "event_id is required"
+                error: "event_id is required",
+                received_body: body
             });
         }
 
@@ -24,9 +35,9 @@ export default async function handler(req, res) {
         const event = {
             event_name: "Subscribe",
             event_time: Math.floor(Date.now() / 1000),
-            event_id: event_id,
+            event_id: eventId,
             action_source: "website",
-            event_source_url: event_source_url || ""
+            event_source_url: eventSourceUrl || ""
         };
 
         const response = await fetch(
@@ -37,12 +48,15 @@ export default async function handler(req, res) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    data: [event]
+                    data: [event],
+                    test_event_code: "TEST2380"
                 })
             }
         );
 
         const result = await response.json();
+
+        console.log("Meta CAPI response:", result);
 
         if (!response.ok) {
             return res.status(response.status).json(result);
@@ -57,7 +71,8 @@ export default async function handler(req, res) {
         console.error("Meta CAPI Error:", error);
 
         return res.status(500).json({
-            error: "Internal server error"
+            error: "Internal server error",
+            message: error.message
         });
     }
 }
