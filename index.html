@@ -235,7 +235,33 @@ document.querySelectorAll('.subscribe-btn').forEach(function(button) {
 
     button.addEventListener('click', function() {
 
-        const eventId = 'subscribe_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        const eventId =
+            'subscribe_' +
+            Date.now() +
+            '_' +
+            Math.random().toString(36).substring(2, 10);
+
+        // Get Meta browser cookie (_fbp)
+        function getCookie(name) {
+            const match = document.cookie.match(
+                new RegExp('(^| )' + name + '=([^;]+)')
+            );
+
+            return match ? match[2] : null;
+        }
+
+        const fbp = getCookie('_fbp');
+
+        // Get Facebook click ID (fbclid)
+        const urlParams = new URLSearchParams(window.location.search);
+        const fbclid = urlParams.get('fbclid');
+
+        // Create fbc from fbclid
+        let fbc = null;
+
+        if (fbclid) {
+            fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+        }
 
         // Browser Pixel
         fbq('track', 'Subscribe', {}, {
@@ -250,9 +276,18 @@ document.querySelectorAll('.subscribe-btn').forEach(function(button) {
             },
             body: JSON.stringify({
                 event_id: eventId,
-                event_source_url: window.location.href
+                event_source_url: window.location.href,
+                fbp: fbp,
+                fbc: fbc
             })
-        }).catch(function(error) {
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            console.log('CAPI response:', data);
+        })
+        .catch(function(error) {
             console.error('CAPI error:', error);
         });
 
