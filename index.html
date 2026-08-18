@@ -232,9 +232,32 @@ We are not SEBI registered.
 	
 	<script>
 document.querySelectorAll('.subscribe-btn').forEach(function(button) {
+
     button.addEventListener('click', function() {
-        fbq('track', 'Subscribe');
+
+        const eventId = 'subscribe_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+
+        // Browser Pixel
+        fbq('track', 'Subscribe', {}, {
+            eventID: eventId
+        });
+
+        // Server-side CAPI
+        fetch('/api/meta-event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                event_id: eventId,
+                event_source_url: window.location.href
+            })
+        }).catch(function(error) {
+            console.error('CAPI error:', error);
+        });
+
     });
+
 });
 </script>
 	
