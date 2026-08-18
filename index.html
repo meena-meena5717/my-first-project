@@ -5,6 +5,27 @@ cat > index.html <<'EOF'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website</title>
+	
+	<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+
+fbq('init', '2345003366242018');
+fbq('track', 'PageView');
+</script>
+
+<noscript>
+<img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2345003366242018&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel Code -->
     
       <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -177,8 +198,7 @@ DEEPAK WADHWA
 </h1>
 
 <a href="https://t.me/+y2muqSiFjYA1MDI1"
-   class="join-btn"
->
+   class="join-btn subscribe-btn">
     JOIN FREE TELEGRAM CHANNEL
 </a>
 
@@ -190,8 +210,7 @@ DEEPAK WADHWA
 </div>
 
 <a href="https://t.me/+y2muqSiFjYA1MDI1"
-   class="join-btn"
->
+   class="join-btn subscribe-btn">
     JOIN FREE TELEGRAM CHANNEL
 </a>
 
@@ -206,5 +225,14 @@ We are not SEBI registered.
 
 </div>
 </div>
+	
+	<script>
+document.querySelectorAll('.subscribe-btn').forEach(function(button) {
+    button.addEventListener('click', function() {
+        fbq('track', 'Subscribe');
+    });
+});
+</script>
+	
 </body>
 </html>
