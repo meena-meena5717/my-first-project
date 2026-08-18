@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-
     if (req.method !== "POST") {
         return res.status(405).json({
             error: "Method not allowed"
@@ -7,11 +6,10 @@ export default async function handler(req, res) {
     }
 
     try {
-
         let body = req.body;
 
+        // Parse request body
         if (!body || typeof body === "string") {
-
             let rawBody = "";
 
             for await (const chunk of req) {
@@ -21,10 +19,10 @@ export default async function handler(req, res) {
             body = rawBody ? JSON.parse(rawBody) : {};
         }
 
-        const eventId = body.event_id;
-        const eventSourceUrl = body.event_source_url || "";
-        const fbp = body.fbp || null;
-        const fbc = body.fbc || null;
+        const eventId = body?.event_id;
+        const eventSourceUrl = body?.event_source_url || "";
+        const fbp = body?.fbp || null;
+        const fbc = body?.fbc || null;
 
         if (!eventId) {
             return res.status(400).json({
@@ -42,7 +40,12 @@ export default async function handler(req, res) {
             });
         }
 
-        // Customer information for Meta matching
+        /*
+         * Customer information
+         * fbp/fbc browser se aayenge.
+         * IP aur User-Agent server request se liye jayenge.
+         */
+
         const userData = {};
 
         if (fbp) {
@@ -53,6 +56,29 @@ export default async function handler(req, res) {
             userData.fbc = fbc;
         }
 
+        // Client IP
+        const forwardedFor = req.headers["x-forwarded-for"];
+
+        const clientIp =
+            forwardedFor
+                ? forwardedFor.split(",")[0].trim()
+                : req.headers["x-real-ip"] || "";
+
+        if (clientIp) {
+            userData.client_ip_address = clientIp;
+        }
+
+        // Browser User-Agent
+        const userAgent = req.headers["user-agent"] || "";
+
+        if (userAgent) {
+            userData.client_user_agent = userAgent;
+        }
+
+        /*
+         * Meta Conversion API event
+         */
+
         const event = {
             event_name: "Subscribe",
             event_time: Math.floor(Date.now() / 1000),
@@ -62,15 +88,15 @@ export default async function handler(req, res) {
             user_data: userData
         };
 
+        console.log("Sending Meta event:", JSON.stringify(event));
+
         const response = await fetch(
             `https://graph.facebook.com/v25.0/${pixelId}/events?access_token=${accessToken}`,
             {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json"
                 },
-
                 body: JSON.stringify({
                     data: [event],
                     test_event_code: "TEST2380"
@@ -80,12 +106,13 @@ export default async function handler(req, res) {
 
         const result = await response.json();
 
-        console.log("Meta CAPI response:", result);
+        console.log("Meta CAPI response:", JSON.stringify(result));
 
         if (!response.ok) {
             return res.status(response.status).json({
                 error: "Meta API error",
-                meta: result
+                meta: result,
+                sent_user_data: userData
             });
         }
 
