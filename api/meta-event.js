@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+
     if (req.method !== "POST") {
         return res.status(405).json({
             error: "Method not allowed"
@@ -6,10 +7,11 @@ export default async function handler(req, res) {
     }
 
     try {
+
         let body = req.body;
 
-        // If body is not already parsed, read the raw request body
         if (!body || typeof body === "string") {
+
             let rawBody = "";
 
             for await (const chunk of req) {
@@ -21,6 +23,8 @@ export default async function handler(req, res) {
 
         const eventId = body.event_id;
         const eventSourceUrl = body.event_source_url || "";
+        const fbp = body.fbp || null;
+        const fbc = body.fbc || null;
 
         if (!eventId) {
             return res.status(400).json({
@@ -38,21 +42,35 @@ export default async function handler(req, res) {
             });
         }
 
+        // Customer information for Meta matching
+        const userData = {};
+
+        if (fbp) {
+            userData.fbp = fbp;
+        }
+
+        if (fbc) {
+            userData.fbc = fbc;
+        }
+
         const event = {
             event_name: "Subscribe",
             event_time: Math.floor(Date.now() / 1000),
             event_id: eventId,
             action_source: "website",
-            event_source_url: eventSourceUrl
+            event_source_url: eventSourceUrl,
+            user_data: userData
         };
 
         const response = await fetch(
             `https://graph.facebook.com/v25.0/${pixelId}/events?access_token=${accessToken}`,
             {
                 method: "POST",
+
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
                     data: [event],
                     test_event_code: "TEST2380"
@@ -77,6 +95,7 @@ export default async function handler(req, res) {
         });
 
     } catch (error) {
+
         console.error("Meta CAPI Error:", error);
 
         return res.status(500).json({
