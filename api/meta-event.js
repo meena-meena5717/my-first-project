@@ -99,7 +99,7 @@ export default async function handler(req, res) {
                 },
                 body: JSON.stringify({
                     data: [event],
-                    test_event_code: "TEST2380"
+                    test_event_code: "TEST74701"
                 })
             }
         );
