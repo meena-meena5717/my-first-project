@@ -260,10 +260,6 @@ document.querySelectorAll('.subscribe-btn').forEach(function(button) {
             fbc = 'fb.1.' + Date.now() + '.' + fbclid;
         }
 
-        // Browser Pixel
-        fbq('track', 'Subscribe', {}, {
-            eventID: eventId
-        });
 
         // Server-side CAPI
         fetch('/api/meta-event', {
@@ -286,6 +282,11 @@ document.querySelectorAll('.subscribe-btn').forEach(function(button) {
         })
         .catch(function(error) {
             console.error('CAPI error:', error);
+        });
+		
+        // Browser Pixel
+        fbq('track', 'Subscribe', {}, {
+            eventID: eventId
         });
 
     });
