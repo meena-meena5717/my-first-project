@@ -98,8 +98,7 @@ export default async function handler(req, res) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                data: [event],
-                test_event_code: "TEST40929"
+                data: [event]
                 })
             }
         );
